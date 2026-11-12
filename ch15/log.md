@@ -1,0 +1,202 @@
+# Ch 15 slides — log
+
+## 2026-11-10
+- Set up `scripts/01_slide_lib.py` (shared page frame) and `scripts/90_make_deck.py` (deck builder), adapted from the PHOENIX EGR 520 deck. They use only the Python standard library.
+- `assets/asu_logo.jpeg` and `assets/campus_photo.jpeg` were extracted from `~/Downloads/Dimensionless learning3.pptx` (image5, image4).
+- The logo's white background is hidden with CSS `mix-blend-mode: multiply`, not turned into a transparent PNG (numpy/PIL aren't installed).
+- Maths font: macOS STIX Two Math is embedded instead of Latin Modern Math (not installed).
+- Slide 0 (title page): `scripts/02_make_slide0_title.py`.
+- Built slide 0 and the deck, and rendered `slides/title.png` with headless Chrome. Two fixes after looking at it:
+  - The cut-line curve crossed the load arrows, so I replaced it with an "a–a" label.
+  - The grey sketch was hard to see on the photo, so I put it on a white card (82 % opacity).
+- Second render checked: no overlaps, the logo crop is correct, and the logo blends cleanly on the photo.
+- **Not checked:** clicking through the deck in a real browser.
+- Campus photo background removed (user request). The title page is now plain white, without the sketch card.
+- Re-rendered: no overlaps. Headless screenshots can catch the beam sketch before its fade-in finishes. To check it, render a copy with the animation turned off.
+- The title-page sketch is now a looping 3-D animation, 8 s per cycle:
+  - The load drops onto the beam, the beam bends, it holds, then the load comes off and the beam springs back.
+  - The bending follows the elastic curve of a simply supported beam under uniform load, with sections staying plane. The pin stays fixed and the roller rolls.
+  - The view is oblique. A rotated view was tried first, but it made the beam slope downhill and was dropped.
+  - Add `?t=SECONDS` to the address to freeze one moment.
+- Campus photo added back at 85 % white wash (the guideline default is 68 %; fainter at the user's request).
+- Checked: renders at t = 0.6 s and t = 4 s, no overlaps.
+- **Not checked:** live playback speed in a real browser.
+
+## 2026-11-10 — slides 1–5 (Sec. 15.1)
+- Plan rule added: every idea gets a clear visual or animation. Each slide now has a visual/animation column in `plan.md`.
+- New lib parts: `TEXT_CSS`, `mi()` / `sym()` for symbols, arrow `markers()`.
+  - Fixed stress colours: σ navy, τ green `#1f7a5a`.
+  - `ELASTIC_JS`: the elastic curve integrated from M(x), plus `revealClock()` (starts an animation on its click) and `?t=` freeze.
+  - `IBEAM_JS`: 3-D W-beam with deflection, sideways shift and twist.
+- Slide 1: Today, four rows with looping SMIL sketches.
+- Slide 2: the beam bends along the computed elastic curve; zoom elements; a bearing plate spreads the load, with the pressure block area held constant.
+- Slide 3: σ = My/I and τ = VQ/It plotted over the section; elements 1–5; a live marker with the element at that height updated live.
+  - σ and τ arrows use separate scales (stated on the slide).
+- Slide 4: elements turn to θp = 0/28/45/62/90° at x = h/2. Stress trajectories are integrated from the stress field (cantilever 4h); 45° crossing marked; crack marks.
+- Slide 5: unbraced vs braced 3-D beam buckling sideways, with a mid-span end view; a sagging beam cracks a plaster ceiling.
+- Checked: still renders of every slide (at t = 1.2–6 s); overlaps fixed.
+- **Not checked:** live playback and click-through in a real browser.
+- New slide 3, "Why a vertical load gives σ_x" (`08_make_slide3_bending.py` → `02b_slide3_bending.html`). Added because the user asked why a vertical load makes σ_x.
+  - Bending of a short piece animated with the pure-bending kinematics (plane sections, N.A. keeps its length); σ_x arrows on the end faces.
+  - First render had the arrows reversed (sign slip). Fixed and checked again.
+- Slides 3–5 renumbered to 4–6. The cross-reference on slide 5 now says "slide 4". Plan table renumbered.
+- Slide 2: added an x–y–z axis marker.
+- Slide 2: σ_y shown on the slide itself (user did not want an extra slide).
+  - Navy shading in the beam under P and at both supports, strong at the contact and fading with depth (illustrative, clipped to the beam), labelled "σ_y: only near the load and the supports".
+  - A small panel animates σ_x/σ_y = ¾(L/h)² (uniform load, rectangle) as L/h runs from 1 to 12: the σ_x bar outgrows the σ_y bar.
+  - Bullet 2 reworded.
+  - The first render broke because the script ran before the panel's HTML. Fixed by moving the script after it, then checked again.
+- Swapped order (user request): the bending slide (why σ_x) is now slide 2, the strength / σ_y slide is now 3. The bending slide's box no longer mentions σ_y, which is only introduced on slide 3.
+- Equations as real maths (MathML): the σ_x/σ_y = ¾(L/h)² ratio on slide 3 (display style), and the formulas in the source lines of slides 3–6 (σ = My/I, τ = VQ/It, sin(πx/L)). New lib constants M_FLEX, M_SHEAR. Deck is now 7.6 MB, because each slide with maths embeds the 1.1 MB STIX font.
+- Slide 3: the shading was ambiguous (same navy as σ_x). σ_y now has its own colour, purple `lib.SIGY`, everywhere on the slide: zoom-element arrows, shading (with small down arrows and a 'σ_y' label at each spot), bearing-plate pressure blocks, the ratio bar and its first mention in the text. σ_x stays navy.
+- Slide 4 (user: section not linked to the figure; which equations; where are points 1–5):
+  - The cut a–a is highlighted in red on the cantilever, with points 1–5 on it. A dashed red connector runs to the section, now outlined in red with points 1–5 marked.
+  - Equations shown as MathML above the plots:
+    - τ = VQ/It = (3V/2A)(1 − 4y²/h²), with the caption "y: height above the N.A.; rectangle: t = b, Q = (b/2)(h²/4 − y²)".
+    - σ = −My/I, with the caption "M < 0 here (hogging): top in tension".
+  - The element column gives y = h/2, h/4, 0, −h/4, −h/2. Layout reworked: plot titles row at y = 186, section at 282–510.
+  - Several patch runs failed on string mismatches before the final one applied. Final render checked: no overlaps.
+- Slide 4: load animation (user request). P cycles 0 → 100 % → 0 over 8 s, starting on click 1, with a % readout next to P.
+  - P, V and M arrows, both stress plots, all element arrows and the live element scale with P (σ, τ ∝ P).
+  - Elements deform (exaggerated) against a dashed outline of the original square: stretched or squashed along x by σ (small Poisson change in y), sheared by τ.
+  - Checked at t = 1 s and 3.5 s.
+- Slide 4 flipped (user request): wall on the left, P at the free right end. The FBD now shows the right part, with V up and M counterclockwise on its cut face.
+  - τ_xy is now negative (TSIGN = −1), so the shear arrows and element lean are mirrored. σ is unchanged (still hogging, top in tension).
+  - **Open:** slide 5 (trajectories) still has P on the left, and its element angles (+28° …) belong to the unflipped beam.
+- Slide 4: cut-and-move animation on click 2 (user request). The red cut flashes at a–a (0–0.6 s), then a copy of the right part (with its P) lifts and slides 318 px to the FBD position (0.6–1.9 s, red outline while moving). V and M fade in on the cut face (1.9–2.7 s). The full beam stays in place. Checked mid-move (t = 1.2 s) and at the end (t = 3.5 s).
+- New slide 3, "Shear stress: τ = VQ/It" (`09_make_slide3_shear.py` → `02c_slide3_shear.html`). Built at the user's request.
+  - Loose vs glued boards loop, with dashed end lines showing the slip and τ arrows on the glue planes toward mid-span.
+  - The equation is colour-coded with its labels and the section parts: V green, Q/A′/ȳ′ amber, I navy, t red.
+  - A sweep line over a rectangle gives A′, ȳ′, t, a live Q value and the τ trace.
+  - Sign-convention element (+V up on the left face / down on the right face, +M clockwise / counterclockwise), with text on the minus in σ = −My/I.
+  - First version used leader lines measured from the MathML. They rendered badly, so they were replaced by colour coding.
+- Slides renumbered: strength 4, section 5, trajectories 6 (its reference now says "slide 5"), limits 7. Plan table renumbered.
+- Slide 3: a curved arrow in each term's colour now runs from its label to V, Q, I and t. Arrows appear with their label's click. Endpoints are measured from the rendered MathML and label text (getBoundingClientRect / Range), so they follow the actual font layout. Labels moved outward so the arrows have length. Checked.
+- Slide 3: smile/frown illustration under the sign-convention element (click 8, looping 6 s). +M sags with clockwise M on the left end and counterclockwise on the right, top squeezed; −M hogs with everything reversed. Pure-bending kinematics. Directions checked on a 3× zoomed render. Text shortened to fit above the source line.
+- Slide 3: the sign-convention element is replaced by a cut demo (user was unsure which face is + and which −). Two red cuts flash on a whole beam, the left and right pieces slide 34 px apart, then +V (in the gap) and +M (half circle on each piece's end) fade in as equal-and-opposite pairs at cut 1 and cut 2. Caption: 'same V, same M: opposite arrows on the two sides of each cut'. Directions checked on a 2× render.
+- Slide 3: sign convention simplified (user: the four-arrow cut demo was confusing). Cut demo and smile/frown removed. It is now two looping tests, each shown on the left and the right piece: '+V tips the piece clockwise' (V down on the left piece's right end, up on the right piece's left end; both tip 7° clockwise) and '+M bends the piece: it smiles' (M counterclockwise on the left piece's right end, clockwise on the right piece's left end). Plus two short lines: the FBD rule and the minus in σ = −My/I. Checked on a 2× render.
+- Slide 5 (section): sign tags on the FBD, appearing with V and M. A dashed clockwise arc above the right part, 'tips clockwise: V > 0'. A dashed drooping (frown) outline of the right part, 'frown: M < 0'. Ties back to the two tests on slide 3. Checked on a 2× render.
+- Slide 5 (section) restored to Hibbeler's orientation after checking Fig. 15-2/15-3 in the PDF: P at the free left end, wall on the right, free body of the left part. Tags now read "tips counterclockwise: V < 0" and "frown: M < 0"; TSIGN back to +1. Slide 7 (trajectories) already matched Hibbeler and was left unchanged.
+- New slide 4, "A stress element is a tiny cube at one point" (`11_make_slide4_element.py` → `02d_slide4_element.html`).
+  - 3-D cantilever with P → a–a cut flashes → the wall part slides away and fades → cut face (red), V and the point appear.
+  - A cube is pulled out of the point and grows, with faces colour-coded: x on the cut, y = horizontal layer, z = no stress.
+  - The view turns face-on (depth factor → 0). The xyz axes follow it, with z becoming ⊙.
+  - τ is then drawn in 4 steps.
+  - The corner check was first marked wrong (tails at bottom-left). Corrected: tips meet at top-right and bottom-left, tails at top-left and bottom-right; the slide marks top-right (tips) and bottom-right (tails).
+- Slides renumbered: strength 5, section 6, trajectories 7 (its reference now says "slide 6"), limits 8. Added TERM_ARROWS_JS to the lib (not used by a slide yet).
+- Slide 6: element deformation removed (user request). Elements stay square; only the arrows grow and shrink with P. Bullet and source line no longer mention stretch/squash/lean or 'deformation exaggerated'.
+- Slide 6: arrow line width and tip size now scale with the stress at that point and the load: stroke = sw·(0.3 + 0.9·|σ| or |τ|), and the markers scale with the stroke. Checked at t = 1 s (50 % load) and t = 3.5 s (100 %).
+- Slide 6: the live marker now steps point by point (user request). Clicks 6–10 move it to points 1–5 with a smooth glide (per-frame ease). The column element is boxed in red and the caption reads 'stresses at point N'. P holds at 100 % while stepping, so the points compare fairly. The single file cycles through the points every 2.5 s. Checked by sending buildstep k = 8; the glide itself was not checked live.
+- Slide 6: the τ parabola and σ line no longer move (user request). They are drawn once at full scale, and the marker dots sit on the fixed curves. The P arrows, V/M and element arrows still follow the load cycle until stepping starts.
+- Slide 4: the wall at the root was a flat rect offset from the beam end, leaving the root looking incomplete. It is now a solid 3-D slab (top, side, hatched front) that the beam runs into. It still slides away and fades with the right part.
+- Slide 4: the cube's x-face now uses the same grey (#9aa1aa) and red outline as the beam's cut face, so it reads as a piece of the cut. The legend swatch follows.
+
+## Slide 9: Size the beam for bending first (15.2, p. 690)
+- New `scripts/12_make_slide9_design.py` → `slides/separate/10_slide9_design.html`, added to the deck after slide 8.
+- Clicks: (1) simply supported beam, uniform w, M diagram with M_max at midspan; (2) section at M_max with c, linear σ profile, σ_allow limit lines, S = I/c, σ_max = M/S; (3) Eq. (15-1) box, terms colour-coded (M_max amber, σ_allow red, S_req'd navy); (4) loop: w grows → S_req'd rises past S, σ_max passes σ_allow (red) → deeper section until S = S_req'd; (5) beam-weight note.
+- All relative units (no textbook numbers); M = wx(L−x)/2, S ∝ h², σ_max = M_max/S, deflection ∝ w/I (exaggerated). Rendered at t = 1.5, 5, 8 and checked.
+- Slide 9 now explains what S is (user request): click 2 shades the section by distance from the N.A. ("area far from the N.A. counts most in I"), shows c and S = I/c; click 3 "bigger S → smaller σ_max", same plank flat vs on edge, S = bh²/6 → 3× (rectangle formula from Ch. 6, noted on slide). Equation moved to click 4, animation 5, weight note 6.
+- Slide 9: stress profile labels now signed: −σ_max (compression) at top, +σ_max (tension) at bottom (sagging, M > 0, σ = −My/I).
+- Slide 9: section-modulus bullets cut to two short lines (S = I/c, so σ_max = M/S; bigger S → smaller σ_max); I and c are explained in the figure. Box and lower bullets moved up.
+- Slide 9: click 3 now states σ_max ∝ 1/S (same M) as a display fraction; plank panel shows σ_max = 1× (flat) vs ⅓× (on edge) next to S = 1× / 3×.
+- Slide 9: c explained in the figure: bold c on the arrow, caption 'c: N.A. to the farthest fibre, where σ is largest', dotted line from the top fibre to the −σ_max tip of the stress profile.
+- Slide 9: c is red (arrow, label, caption) with a red band from N.A. to the top fibre; the label jumps/grows and the band flashes for 3 s after click 2.
+
+## Slide 10: Three ways to get a bigger S (new, user request)
+- `scripts/13_make_slide10_bigger_s.py` → `slides/separate/11_slide10_bigger_s.html`, in the deck after slide 9. Old plan slides 10–21 shift by one.
+- Click 1 deeper: b×h, 2b×h, b×2h to scale, S/A bars 1/1, 2/2, 4/2 (S = bh²/6). Click 2 (loop): 1×4 rectangle, middle third = 33 % of area, 1/27 ≈ 4 % of I; morphs at constant area and depth into an I-shape (tf = 0.5, tw = 0.25, bf = 3.25), S computed live → 1.98×. Click 3: section scaled 2^(1/3) = 1.26 → S 2×, A 1.59×. Click 4: weight to double S: 1.59× / 1.41× / 1.00×; conclusion → W-shapes.
+- Sections and ratios are my illustration (noted on the slide), not textbook data. Rendered at t = 1, 4, 6 and checked.
+- Slide 10: animation removed (user: too slow to follow). Panel 2 is now static: rectangle with middle third marked → 'move it out' arrow → I-shape of the same area and depth, S/A bars 1/1 and 2/1. Page has no script now.
+- Slide 10 rewritten simpler (user: too many cases): three before→after pairs to scale, one S value under each, one red take-away line per panel, conclusion box. Bars, captions and weight summary removed.
+- Slide 10: weight row added under each section (1×→2×, 1×→1×, 1×→1.6×); take-aways now '4× the S for 2× the weight', '2× the S, same weight', '2× the S for 1.6× the weight'.
+- Slide 10: grey subtitle per panel saying how the section changes: 'same width, depth × 2' / 'same area and depth, reshaped' / 'same shape, width and depth × 1.26'.
+- Slide 10 animated (user: 'now it's clean'): on each click the right section grows/reshapes out of the left one over 2.2 s (depth ×2; rectangle → I at constant area; uniform ×1.26), S and weight count up live (computed), take-away fades in after; no loop. Checked at t = 1.6 (mid) and 4 (end).
+
+## Slide 11: Design procedure (one slide, 75-min budget)
+- User agreed the deck is too long; plan cut: one procedure slide replaces "S_req'd to a section", "W-shapes", "wood/built-up", "procedure". Then Ex 15.1 (1), Ex 15.2 (1), Ex 15.3 (2), wrap-up (1). Slides 5 and 7 to be kept short.
+- `scripts/14_make_slide11_procedure.py` → `slides/separate/12_slide11_procedure.html`, in the deck after slide 10.
+- Four step cards, one per click, each with a one-shot animation (~1.5 s, no loop): (1) V and M diagrams drawn left to right, V_max/M_max marked; (2) S_req'd = M_max/σ_allow, simple shape solve S = I/c, steel: three made-up I-shapes all with S > S_req'd, weight bars from computed areas (3.01, 2.12, 1.57), red box on the lightest; (3) τ_allow ≥ V_max Q/It, rectangle 1.5 V_max/A (parabola grows), W-shape V_max/A_web (web shaded); (4) q_allow = VQ/I, nails drop into a two-board beam, spacing s. Click 5: short/heavily loaded (wood) beams → shear first; wood actual size 2×4 = 1.5 × 3.5 in.
+- All rules and equations from the Procedure for Analysis, p. 693; wood size p. 691. Rendered at t = 0.9 and 4, checked.
+- Slide 11: card boxes (grey fill + border) removed; plain columns with thin grey dividers.
+- Slide 11: each card's equations now labelled CALCULATE (navy) vs REQUIREMENT (red). 1: V_max, M_max. 2: calc S_req'd = M_max/σ_allow; req S ≥ S_req'd (simple shape: solve size; steel: lightest that passes). 3: calc τ_max = V_max Q/It (rect 1.5V_max/A, W V_max/A_web); req τ_max ≤ τ_allow. 4: calc q = VQ/I, s = F/q (F one nail's capacity, checked against Ex 15.3 p. 697); req nail spacing ≤ s.
+- Slide 11: under σ_allow (card 2) and τ_allow (card 3): 'given (code or problem)'.
+- Slide 11 maths tidied (user: cluttered): each card has two aligned rows 'Compute' (navy) and 'Check' (red) with one display equation each, plus one grey caption. Shortcuts τ_max = 1.5V/A and ≈ V/A_web moved under the shapes in the figure; 'allowable stresses are given' moved to the bottom notes. Card 4: q = VQ/I, check s ≤ F/q.
+- Lib: sym() now sets multi-letter subscripts (max, allow, req'd, web) upright, one-letter ones italic, as in the book. All slides rebuilt.
+
+## Slide 12: Example 15.1 (one slide)
+- `scripts/15_make_slide12_ex151.py` → `slides/separate/13_slide12_ex151.html`, in the deck after slide 11.
+- Data re-read from the p. 694 photo (Fig. 15-7 cropped): A pin at 0, 40 kip at 6 ft, roller B at 12 ft, 20 kip at 18 ft; reactions 10/50 kip; V 10/−30/20; M 60 at 6 ft, 0 at 8 ft, −120 at B. Script recomputes M (60, −120, 0), S_req'd = 60 in³, τ_avg = 5.321 ksi.
+- Clicks: 1 problem + Given/Find; 2 reactions, V and M drawn left to right, V_max = 30 kip, M_max = 120 kip·ft marked; 3 S_req'd = 60 in³, book table of 5 adequate shapes, W18 × 40 lights up as lightest; 4 τ_avg = V_max/(d t_w) = 5.32 ksi ≤ 14.5 OK; 5 answer W18 × 40. Compute/Check rows as on slide 11.
+- plan.md: revised 75-min plan added on top.
+
+## Slide 12: How to draw the V and M diagrams (new, before Ex 15.1, which is now slide 13)
+- `scripts/16_make_slide12_vm.py` → `slides/separate/13a_slide12_vm.html`. Ex 15.1 page number changed to 13.
+- Ex 15.1 beam. Click 1: reactions (ΣM_A → B = 50 kip, ΣF_y → A = 10 kip). Click 2: a red cut sweeps left to right (6 s), beam left of the cut tinted, V traced, jumps labelled (+10, −40 → −30, +50 → +20, −20 → 0 ✓). Click 3: second sweep, area under V shaded per segment (+60, −180, +120), M traced (60, 0 at 8 ft, −120, 0 ✓). Click 4: rules box.
+- Method is from the book's earlier V/M chapter (not in the Ch. 15 photos), noted on the slide. Rendered at t = 3.4 and 8.
+- Slide 12 rebuilt as the method of sections (user: show the cut pieces): click 1 reactions + "keep the left piece, draw V down and M counterclockwise (positive)"; clicks 2–4 one cut each (0<x<6, 6<x<12, 12<x<18): FBD of the left piece with 10/40/50 kip and V, M on the cut face, ΣF_y and ΣM_cut equations → V = 10, −30, 20 kip; M = 10x, 10x − 40(x−6), 10x − 40(x−6) + 50(x−12) with end values 60, −120, 0 ✓; the matching piece of the V and M diagrams and a numbered cut line appear on the left. Click 5 shortcut box (jumps, area under V). No animation. Sweep version removed.
+- Slide 12: ΣF_y = 0 / ΣM_cut = 0 labels, cut ranges and end values (x = 6: M = 60 …) now MathML like the other equations.
+- Slide 12: reactions named R_A, R_B. Click 1 shows the beam with unknown R_A, R_B beside the arrows; click 2 solves them (ΣM_A: R_B(12) − 40(6) − 20(18) = 0 → R_B = 50 kip; ΣF_y: R_A + R_B − 40 − 20 = 0 → R_A = 10 kip) and '= 10 kip', '= 50 kip' appear next to the arrows. FBDs label R_A = 10, R_B = 50. Cuts now clicks 3–5, shortcut click 6.
+- Slide 12: support symbols removed from the beam (it is a free-body diagram with R_A, R_B).
+- Slide 12: reaction arrows end at the beam; dimension row moved below them.
+- Slide 12 click order: 1 beam with pin and roller; 2 supports fade out (buildstep listener, k ≥ 2) and R_A, R_B arrows appear; 3 reactions solved, '= 10 kip', '= 50 kip' appear; 4–6 cuts; 7 shortcut. Checked click states 1–3 by injecting buildstep.
+- Slide 11 card 3: W-shape now shows τ = VQ/It computed over the section (flanges ~0.1, web 0.75–1.0 of the peak) growing with the rectangle's parabola, the web shaded and a red dashed 'average' line at V/(d t_w) = 0.83 of the peak; label τ_avg = V/A_web (book's Ex 15.1 notation). Gives the reason for the shortcut used in Ex 15.1.
+- Slide 11 card 3: d (full depth, dimension arrow) and t_w (web thickness, leader) marked on the W-shape; label τ_avg = V/(d t_w). Slide 13 shear caption spells out 'depth d', 'web thickness t_w'.
+- Slide 11: W-shape labelled '(wide-flange I-beam)'; τ curve marks 'max' at the N.A. next to the red 'average'; bottom note: the book (p. 693) takes τ uniform over the web and checks τ_avg = V/(d t_w) ≤ τ_allow; true peak only slightly higher.
+- Slide 13: problem statement now a boxed 'PROBLEM' block (navy border, thick left bar): loads per Fig. 15-7, σ_allow = 24 ksi and τ_allow = 14.5 ksi in bold large maths, 'Find: the lightest W-shape that works' in red.
+- Lib: wbeam_side() (side view with dark flange strips, light web) and wsection_icon() (small I end view). Slides 12 and 13 beams now drawn as W-beams with a section icon ('W-shape' on 12, 'W-shape: ?' on 13).
+- Slides 12, 13: beam drawn as an engineering elevation (depth 26 px, flange inner edges as visible lines, dash-dot centre line) with an end view (W cross-section) to the right of the free end, joined by dashed projection lines, labelled 'end view' and 'W-shape' / 'W-shape: ?'. Lib: wbeam_elev(), wbeam_end_view(). Everything below the beam shifted down 12 px; slide 12 V and M diagrams moved down to clear the dimension row.
+- Lib wbeam_elev: realistic shading (flanges lit, light gradient; web darker, shadowed under the top flange), flange depth 0.2h. End view uses the same proportions. Slide 13 figure moved up (top 96) so the loads line up with the Problem box.
+- Beam elevation: centre (N.A.) dash-dot line removed.
+- Slide 13: click 3 adds a 'W18 × 40' key (W = wide-flange shape, 18 = about 18 in. deep (actual d = 17.90 in.), 40 = 40 lb/ft; p. 691) and a W18 × 40 section sketch with d = 17.90 in. and t_w = 0.315 in. (flange drawn to rough proportion, not from the photos). V and M diagrams compressed (VS 1.6, MS 0.6) to make room.
+- Ex 15.1 now starts on slide 12: title "Example 15.1 (1/2): draw the V and M diagrams", Problem box on click 1 (σ_allow = 24 ksi, τ_allow = 14.5 ksi, Find: lightest W-shape; first step V and M). Right column re-spaced (reactions 196, cuts 300/406/512, FBDs scaled 0.87, shortcut 622). End view pulled closer, lower label dropped. Slide 13 title "Example 15.1 (2/2): pick the lightest W-shape"; step 1 says "Diagrams (slide 12)".
+
+## Slide 14: Example 15.2 (one slide)
+- `scripts/17_make_slide14_ex152.py` → `slides/separate/14_slide14_ex152.html`, in the deck after slide 13.
+- Fig. 15-8 read from the p. 695 photo: 12 kN/m over 4 m, 1 m overhang left of pin A, roller B at the right end 3 m from A; R_A = 32 kN, R_B = 16 kN; V −12 / +20 / −16, zero 1.33 m left of B; M −6 at A, 10.67 kN·m max. Script recomputes M(8/3) = 10.67, M(1) = −6, a_bend = 0.1470 m, a_shear = 0.1826 m.
+- τ with a = 0.147 m computes to 0.926 MPa; the book prints 0.929 MPa (rounding of a); the slide shows the book's 0.929.
+- Clicks: 1 Problem box + glulam beam; 2 V and M (book values, V_max/M_max in red); 3 S_req'd = 0.00119 m³, I/c for a × 1.5a → a = 0.147 m, section drawn to scale; 4 τ_max = 0.929 MPa > 0.6 FAILS, red τ bar above the allowable line; 5 redesign a = 183 mm: section grows (1.6 s), bar drops to 0.600 MPa (green); answer box.
+- plan.md: slide 13 → done.
+- Slide 14 reorganised (user: not aligned/clean): Problem as a full-width strip under the title; left column beam → V → M → section + τ bar, right column steps 1–4 at fixed tops (166/222/376/512) and the answer at 652. Every step now writes the formula first, then the numbers (user: values were put in without the original equation): S_req'd = M_max/σ_allow = …; S = I/c = … ⇒ a; τ_max = 1.5V_max/A = …; check τ_max ≤ τ_allow?; τ_allow = 1.5V_max/A: 0.6(10⁶) = … ⇒ a = 0.183 m. Units dropped inside fractions (step 2 header says N, m); results keep units. Row tags: Compute / Solve / Check.
+- Slide 14: beam cross section shown from click 1 with dimension arrows a (width) and 1.5a (depth), symbols only until a is found (click 3), then values (147 mm / 220 mm → 183 mm / 274 mm). τ bar moved right to clear the depth label.
+
+- Slide 14: right-hand steps now in one flex column with a uniform 24 px gap (no per-step top offsets).
+
+- New slide 14 (18_make_slide14_vm152.py): Ex 15.2 V and M by cuts (reactions, cut 1, cut 2, M_max at V = 0). Ex 15.2 design slide is now 15, titled (2/2). Both use a flex column for uniform step spacing.
+
+- Ex 15.3 added: 19_ex153_common.py (shared geometry), slide 16 (20_make_slide16_ex153a.py: reactions, V/M, centroid and I, bending 5.24 MPa OK, shear 309 kPa OK, sigma/tau bars vs allowables) and slide 17 (21_make_slide17_ex153b.py: slip sketch, Q flange 0.345e-3, q 8.61/5.74 kN/m, s 0.174/0.261 m -> 150/250 mm, nails drawn to scale). All numbers checked against p. 696-697.
+- Slide 17: the slip sketch is now a side view of the same T-beam (flange strip on the web) bending under load; without nails the flange slides off the web ends, nailed they stay flush.
+- Slide 17: slip sketch redone as two small 3-D (oblique) pieces of the T-beam, T on the end face: unnailed, the flange slides along the web (one shot); nailed, nail heads on the flange.
+- Slides 16-17: removed the white centroid dot on A' (looked like a hole). Slide 17 marks the flange centroid with a thin dashed line out to the y-bar' dimension.
+- Slides 16-17: one-line Q reminder under the Q row ("first moment of A' (area beyond the line) about the N.A."). Slide 17 answer box moved to top 612.
+- Slide 17: q and s rows now formula first (q = V Q / I, s = F / q) then numbers; s_BC and s_CD on separate rows; answer box moved into the step column.
+- New slide 17 (22_make_slide17_shearflow.py): why the nails carry q = VQ/I. Flange slice free body: end pushes F1 = MQ/I, F2 = (M+dM)Q/I grow (click 2), slice slides without a nail (3), nail holds it with dF (4), shear flow along the joint and s = F/q, check q s = 1.29 kN <= 1.50 kN (5). Nail-spacing slide is now 18.
+- Slide 17: 3-D zoom now translucent wood; at click 4 the web top (interface) turns red and a 3-D nail (gradient shaft, head on the top face) fades in through the flange into the web, ring + label where it crosses the interface.
+- Slide 17: small M diagram under the beam; click 2 grows red M bars at the two cuts (real Ex 15.3 values 0.81 and 1.53 kN.m), then the end pushes grow in the same ratio (F1 "from M", F2 "from M + dM"). Step 2 caption: F grows with M, so F2 > F1.
+- Slide 17: click 5 adds a small tau element at the joint (tau on horizontal faces = tau on vertical faces); step 4 caption q = tau t, the tau of VQ/(It) acting along the joint.
+- Title slide: added "PI: Zhengtao Gan, Assistant Professor" under the TA line.
+- Title slide: email is a blue mailto link.
+- All slides: bottom notes reworded to formal citation style (no first person, no 'made up' / 'my illustration').
+- Notes: max-width 1150px, one line (nowrap); shortened slide 5 and 7 notes that ran into the page number.
+- Slide 19: closing page (Thank you! / Questions?, name, school, email), added to the deck.
+- Deck: page numbers shown as n / total.
+- Step numbers: plain bold navy '1.' instead of filled navy circles; red cut badges removed (text already says 'Cut n').
+- Slide 6: cantilever now bends with the load cycle (tip-load elastic curve w ~ s^2(3L - s), tip 24 px at full P, exaggerated); P arrow rides on the tip; note says deflection exaggerated.
+- Slide 6: tension / compression labels moved outside the sigma triangle (bold), off the hatching.
+- Slide 6: shear / bending / element panels spread out (tau axis 150, sigma axis 490, elements 715), headings + formulas + captions left-aligned per panel, thin grey dividers; tension/compression labels on the white side of the sigma axis.
+- Slide 10: dashed grey dividers between the three panels (appear with panels 2 and 3).
+- Deck renamed: slides/RAS215_Ch15_Design_of_Beams_and_Shafts.html (was ch15_deck.html); browser tab title 'RAS 215 – Chapter 15: Design of Beams and Shafts'.
+- Slide 15: FAILS label boxed (red border, light red fill, bold).
+- Pins now show a horizontal reaction: slides 12/14/16 draw A_x (B_x) at the pin (lib.hreact), '= 0' on the solve click; sum F_x = 0 added to the reaction step. Slides 8 (both buckling beams and the deflection beam) and 11: right support changed pin -> roller.
+- Horizontal pin reactions renamed A_x / B_x -> R_Ax / R_Bx (labels and sum F_x lines); sym() italicises 2-letter subscripts.
+- Vertical reactions renamed R_A/R_B/R_D -> R_Ay/R_By/R_Dy (figures, cut FBDs, equations, slide 15 recap) to match R_Ax/R_Bx; value labels nudged for the wider names.
+- Slide 19: today's outcome (4 rows mirroring slide 1: limits, S_req, shear check, q and s); thanks moved to slide 20 (23_make_slide20_thanks.py -> 20_slide20_thanks.html).
+- Wording: 'size' -> 'design' / 'select' (slide 1 title + row 2, slide 9 title, slide 11 card 2 heading, slide 15 title, slide 19 title + row 2).
+- Slide 9: bullet defining a prismatic beam (same cross section along its length; one S, so the M_max section governs). Definition not from a legible source page (p. 687 blurry); standard meaning.
+- Slide 17: click 4 shows nails in the beam, one per slice, with an 's = nail spacing' dimension between two nails (= slice length); zoom label 's = nail spacing'; 'flange slice' label moved left of the slice.
+- Title slide: event block on two lines: "RAS 215 lecture" / "Thursday, November 12, 2026".
+- Title and thank-you pages: background now the ASU Polytechnic campus photo (asuevents.asu.edu, 2026-05), saved as assets/polytechnic_photo.jpeg (1600 px JPEG); old campus_photo.jpeg kept.
+- Title slide: PI line moved to the end of the name block (after email).
+- Title slide: 14 px gap above the PI line; PI line 18 px (guideline A12).
+- Slide 9 decluttered: removed the flat/on-edge plank comparison (slide 10 covers it), the sigma ~ 1/S bullet and the shading caption; shorter bullets; gauges moved up 40 px; clicks now 1-5.
+- Slide 9: looping load/section animation replaced by clicks: 4 gauges at design load (OK), 5 load doubles (sigma_max > sigma_allow, red), 6 deeper section until S = S_req'd; bullets now clicks 6-7; gauge scale 100 px/unit, status text above the tallest bar.
+- Slide 14: click 3 fades the 12 kN/m load to 20 % while the 48 kN resultant is shown; back to full at click 4; resultant arrow now reaches the beam.
