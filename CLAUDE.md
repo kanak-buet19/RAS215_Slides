@@ -13,7 +13,13 @@ Lecture slides I make as TA for RAS 215, built from the course textbook.
 
 ## Slide design
 
-- Use the **look** from `/Users/rakibul/work/Research/PHOENIX/docs/presentation-guideline.md`:
+The Ch 15 deck was built following every instruction in this file and the two style guides in `docs/`:
+- `docs/presentation-guideline.md`: design rules (look only, not storytelling)
+- `docs/slide_style.md`: visual reference
+
+Both are copied from the PHOENIX project. The rules are implemented in `ch15/scripts/01_slide_lib.py`, the shared page frame.
+
+- Use the **look** from `docs/presentation-guideline.md`:
   - page grid, fonts and text sizes, colours, title style
   - equations, figures and drawings
   - click-by-click reveal
@@ -27,7 +33,7 @@ Lecture slides I make as TA for RAS 215, built from the course textbook.
 - Template code to reuse: `/Users/rakibul/work/Research/PHOENIX/projects/38_20261030_PHOENIX_EGR520_Presentation/task1_slides/`
   - `scripts/02_slide_lib.py`: shared frame
   - `scripts/10_make_deck.py`: deck builder
-  - `slide_style.md`: visual reference
+  - `slide_style.md`: visual reference (copy in `docs/slide_style.md`)
 - Audience: undergraduate engineering students. Define every symbol once. Show worked examples step by step, one step per click.
 - Redraw textbook figures (beams, loads, cross sections, V and M diagrams) as SVG. Don't paste photos of the book.
 
