@@ -1,6 +1,6 @@
 """Shared parts of every Ch 15 slide.
 
-Look follows /Users/rakibul/work/Research/PHOENIX/docs/presentation-guideline.md
+Look follows ../../docs/presentation-guideline.md
 (design only): a fixed 1280 x 720 px page, navy bold title top left, ASU logo
 top right, page number bottom right, grey source line bottom left.
 
@@ -10,7 +10,8 @@ Standard library only (no numpy / PIL):
   is dropped with CSS mix-blend-mode: multiply, so it also sits cleanly on
   the title-page photo; the 'Arizona State University' wordmark is kept, the
   empty margin is cut off by the wrapper box.
-- maths font: macOS STIX Two Math, embedded as a data URI on slides with MathML.
+- maths font: STIX Two Math (SIL Open Font License), ../../assets/STIXTwoMath.otf,
+  embedded as a data URI on slides with MathML.
 
 Slide scripts load this file with importlib.import_module("01_slide_lib").
 """
@@ -28,7 +29,8 @@ RED = "#C00000"    # the one emphasis colour
 INK = "#000000"
 GREY = "#555555"
 FONT = "Arial, Helvetica, sans-serif"
-MATH_FONTS = [Path("/System/Library/Fonts/Supplemental/STIXTwoMath.otf"),
+MATH_FONTS = [ROOT / "assets" / "STIXTwoMath.otf",
+              Path("/System/Library/Fonts/Supplemental/STIXTwoMath.otf"),
               Path("/usr/share/texmf/fonts/opentype/public/lm-math/latinmodern-math.otf")]
 
 SOURCE = "R. C. Hibbeler, <i>Statics and Mechanics of Materials</i>, 6th ed., Pearson"

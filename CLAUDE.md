@@ -57,7 +57,7 @@ I make these lecture slides as the TA for RAS 215, built from the course textboo
 - Each equation is labelled **Compute** (navy) or **Check** (red).
 - Every symbol is defined once, including words like "prismatic".
 - **How they are drawn:** hand-written MathML in the Python scripts, rendered natively by the browser.
-  - The STIX Two Math font is embedded (`math_font_css()` in `01_slide_lib.py`).
+  - The STIX Two Math font (`assets/STIXTwoMath.otf`) is embedded (`math_font_css()` in `01_slide_lib.py`).
   - Possible but not used: Latin Modern Math for a LaTeX look, or KaTeX/MathJax to write LaTeX source.
 
 ### Consistency
