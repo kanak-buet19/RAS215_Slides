@@ -1,0 +1,76 @@
+# PHOENIX plot style (Times-like STIX text, TrueType fonts in PDF).
+# Same as the MSEC2027 paper figures. Sizes are for figures printed at
+# their real size: 7.0 in wide for a full page width, 3.3 in for one column.
+
+# --- Font & Text ---
+text.usetex          : False
+font.family          : STIXGeneral
+mathtext.fontset     : stix
+font.size            : 10
+figure.figsize       : 7.0, 3.2
+
+# Embed TrueType instead of Type 3 fonts.
+pdf.fonttype         : 42
+ps.fonttype          : 42
+
+# --- Bar plots ---
+patch.edgecolor      : black
+patch.linewidth      : 0.6
+patch.force_edgecolor: True
+
+# --- Layout ---
+figure.constrained_layout.use   : True
+figure.constrained_layout.h_pad : 0.02
+figure.constrained_layout.w_pad : 0.02
+figure.constrained_layout.hspace: 0.02
+figure.constrained_layout.wspace: 0.02
+
+# --- Axes ---
+axes.titlesize       : 11
+axes.labelsize       : 11
+axes.linewidth       : 0.8
+axes.labelpad        : 3
+axes.grid            : False
+axes.titlepad        : 4
+
+# --- Lines ---
+lines.linewidth      : 1.5
+lines.markersize     : 4
+lines.markeredgewidth: 0.8
+lines.solid_capstyle : round
+
+# --- Legend ---
+legend.fontsize      : 9
+legend.frameon       : True
+legend.framealpha    : 0.8
+legend.loc           : best
+
+# --- Ticks ---
+xtick.labelsize      : 10
+ytick.labelsize      : 10
+xtick.major.size     : 3
+ytick.major.size     : 3
+xtick.major.width    : 0.6
+ytick.major.width    : 0.6
+xtick.direction      : in
+ytick.direction      : in
+xtick.top            : True
+ytick.right          : True
+xtick.minor.visible  : False
+ytick.minor.visible  : False
+
+# --- Figure / savefig ---
+figure.dpi           : 300
+savefig.dpi          : 300
+savefig.transparent  : False
+savefig.bbox         : tight
+savefig.pad_inches   : 0.02
+
+# --- Grid ---
+grid.color           : 0.8
+grid.linestyle       : --
+grid.linewidth       : 0.4
+
+# --- Color cycle ---
+# Hex colours without '#' ('#' starts a comment in .mplstyle files).
+axes.prop_cycle: cycler('color', ['0173B2', 'DE8F05', '029E73', 'CC78BC', 'CA9161', '949494'])

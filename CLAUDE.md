@@ -14,7 +14,7 @@ I make these lecture slides as the TA for RAS 215, built from the course textboo
 
 ## 2. Design
 
-- **The look** comes from `docs/presentation-guideline.md`, Part A2–A13 plus Part B, and `docs/slide_style.md`. Both are copied from the PHOENIX project.
+- **The look** comes from `docs/presentation-guideline.md`, Part A2–A13 plus Part B, and `docs/slide_style.md`. Both are copied from the PHOENIX project, as is `docs/phoenix.mplstyle`, the matplotlib style for any data plot (the guideline's `code_base/toolbox/phoenix.mplstyle`). Ch 15 has no matplotlib plots; all its figures are SVG.
 - **Not used:** the guideline's storytelling (A1: story order, goal-line chaining).
 - **Order:** each lecture follows the textbook's section order:
   1. concept
